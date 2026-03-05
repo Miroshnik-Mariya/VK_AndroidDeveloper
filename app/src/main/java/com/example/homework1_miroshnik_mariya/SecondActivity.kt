@@ -22,7 +22,6 @@ class SecondActivity : AppCompatActivity() {
 
         val userText: TextView = findViewById(R.id.userText)
 
-
         // ПОЛУЧАЕМ ТЕКСТ ИЗ INTENT
         val receivedText = intent.getStringExtra("USER_TEXT")
 
