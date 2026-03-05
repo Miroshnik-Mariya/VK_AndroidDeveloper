@@ -25,39 +25,42 @@
         android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintWidth_percent="0.85"
+        android:padding="3dp"
         app:layout_constraintBottom_toTopOf="@+id/text2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.466"
         app:layout_constraintVertical_chainStyle="packed"
-        android:padding="3dp">
+        app:layout_constraintWidth_percent="0.85">
 
         <EditText
-            android:id="@+id/editTextText"
+            android:id="@+id/editTextEnterText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="56dp"
+            android:background="@android:drawable/editbox_background"
             android:hint="@string/enterText"
             android:inputType="text"
+            android:minHeight="56dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:background="@android:drawable/editbox_background"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnAct2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:minHeight="48dp"
             android:text="@string/openActivity2"
-            app:layout_constraintTop_toBottomOf="@+id/editTextText"
-            app:layout_constraintStart_toStartOf="parent"
+            app:cornerRadius="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:cornerRadius="16dp"/>
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextEnterText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
