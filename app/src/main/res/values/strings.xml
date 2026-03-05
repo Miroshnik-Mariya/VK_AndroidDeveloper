@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Homework1_Miroshnik_Mariya</string>
     <string name="welcome">Да здравствует новый проект!</string>
-    <string name="creator">Created by Maria Miroshnik</string>
+    <string name="creator">Created by Mariya Miroshnik</string>
+
+    <string name="enterText">Введите текст: </string>
+    <string name="openActivity2">Открыть вторую Activity</string>
 </resources>
