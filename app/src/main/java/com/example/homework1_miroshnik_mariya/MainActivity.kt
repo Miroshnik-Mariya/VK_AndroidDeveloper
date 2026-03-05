@@ -22,11 +22,15 @@ class MainActivity : AppCompatActivity() {
 
         val textEnter: EditText = findViewById(R.id.editTextEnterText)
         val openActivity2: Button = findViewById(R.id.btnAct2)
+        val intent = Intent(this, SecondActivity::class.java)
 
 
         openActivity2.setOnClickListener {
-            val intent = Intent(this, SecondActivity::class.java)
+            val enteredText = textEnter.text.toString()
+            intent.putExtra("USER_TEXT", enteredText)  // "USER_TEXT" - это ключ
             startActivity(intent)
         }
+
+
     }
 }

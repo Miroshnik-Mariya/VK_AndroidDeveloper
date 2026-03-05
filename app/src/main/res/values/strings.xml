@@ -5,4 +5,5 @@
 
     <string name="enterText">Введите текст: </string>
     <string name="openActivity2">Открыть вторую Activity</string>
+    <string name="userText">Здесь будет ваш текст</string>
 </resources>
