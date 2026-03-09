@@ -6,4 +6,7 @@
     <string name="enterText">Введите текст: </string>
     <string name="openActivity2">Открыть вторую Activity</string>
     <string name="userText">Здесь будет ваш текст</string>
+
+    <string name="callFriend">Позвонить другу</string>
+    <string name="shareText">Поделиться текстом</string>
 </resources>

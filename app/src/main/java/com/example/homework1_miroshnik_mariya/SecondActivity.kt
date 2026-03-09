@@ -25,7 +25,6 @@ class SecondActivity : AppCompatActivity() {
         // ПОЛУЧАЕМ ТЕКСТ ИЗ INTENT
         val receivedText = intent.getStringExtra("USER_TEXT")
 
-        // Устанавливаем полученный текст в TextView
         if(receivedText.isNullOrEmpty()){
             userText.text = "Текст не получен"
         }
