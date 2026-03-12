@@ -22,5 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Homework1_Miroshnik_Mariya"
+rootProject.name = "VK"
 include(":app")
+ 
