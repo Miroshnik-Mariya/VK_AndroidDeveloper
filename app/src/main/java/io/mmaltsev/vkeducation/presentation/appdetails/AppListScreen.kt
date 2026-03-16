@@ -146,7 +146,8 @@ fun AppListScreen(navController: NavController) {
        LazyColumn(
            modifier = Modifier
                .fillMaxSize()
-               .background(Color.White)
+               //.background(Color.White)
+               .background(MaterialTheme.colorScheme.surface)
                //.roundedCornerShape(topStart = 32.dp,topEnd = 32.dp)
                .clip(RoundedCornerShape(18.dp)),
 
@@ -176,8 +177,6 @@ fun AppListItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-
-
             .clickable { onClick() },
 //        shape = RoundedCornerShape(
 //            topStart = 12.dp,
@@ -189,7 +188,8 @@ fun AppListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)
+                //.background(Color.White)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -204,7 +204,8 @@ fun AppListItem(
             Column {
                 Text(
                     text = app.name,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = app.category,
@@ -225,7 +226,6 @@ fun AppListItem(
 @Preview(showBackground = true)
 @Composable
 fun AppListScreenPreview() {
-    // Создаем фейковый navController для превью
     AppListScreen(navController = rememberNavController())
 }
 
