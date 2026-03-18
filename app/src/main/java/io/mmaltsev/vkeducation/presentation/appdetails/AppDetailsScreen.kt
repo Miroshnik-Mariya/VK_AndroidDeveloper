@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.mmaltsev.vkeducation.R
+import io.mmaltsev.vkeducation.presentation.applist.AppDetailsState
 import kotlinx.coroutines.flow.Flow
 
 @Composable

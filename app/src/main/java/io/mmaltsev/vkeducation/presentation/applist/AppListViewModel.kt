@@ -1,15 +1,16 @@
-package io.mmaltsev.vkeducation.presentation.appdetails
+package io.mmaltsev.vkeducation.presentation.applist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vk.presentation.App
+//import com.example.vk.presentation.App
+import io.mmaltsev.vkeducation.R
+import io.mmaltsev.vkeducation.domain.model.App
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
-import io.mmaltsev.vkeducation.R
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class AppListViewModel : ViewModel() {
 
@@ -132,7 +133,7 @@ class AppListViewModel : ViewModel() {
 
     fun onLogoClicked() {
         viewModelScope.launch {
-            _snackbarEvents.emit("Логотип нажат!")
+            _snackbarEvents.emit("Привет! Не нажимай на меня;)")
         }
     }
 
