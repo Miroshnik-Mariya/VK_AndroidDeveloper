@@ -61,26 +61,35 @@ fun AppListScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .background(Color.Blue)
-//           .padding(horizontal = 40.dp)
+                //.background(Color.Blue)
         )
 
         {
             AppListHeader(onLogoClick = { viewModel.onLogoClicked() })
-            LazyColumn(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface)
-                    .clip(RoundedCornerShape(18.dp)),
-                contentPadding = PaddingValues(0.dp),
+                    .clip(RoundedCornerShape(18.dp))
             ) {
-                items(apps) { app ->
-                    AppListItem(
-                        app = app,
-                        onClick = {
-                            // Переход на карточку приложения
-                            navController.navigate("app_detail/${app.id}")
-                        }
-                    )
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surface),
+                        //.clip(RoundedCornerShape(18.dp)),
+                    contentPadding = PaddingValues(0.dp)
+
+                ) {
+                    items(apps) { app ->
+
+                        AppListItem(
+                            app = app,
+                            onClick = {
+                                // Переход на карточку приложения
+                                navController.navigate("app_detail/${app.id}")
+                            }
+                        )
+                    }
+
                 }
             }
         }
@@ -93,6 +102,10 @@ fun AppListScreen(
         Box(modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
+//            .background(
+//                color = Color.Blue,
+//                //shape = RoundedCornerShape(bottomStart = 18.dp, bottomEnd = 18.dp)
+//            )
             .clickable{onLogoClick()}
             .padding(20.dp)
         )
@@ -121,19 +134,18 @@ fun AppListScreen(
 @Composable
 fun AppListItem(
     app: App,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(0.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                //.background(Color.White)
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
