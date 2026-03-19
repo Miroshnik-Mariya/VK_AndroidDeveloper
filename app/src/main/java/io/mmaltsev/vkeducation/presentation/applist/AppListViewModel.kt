@@ -1,7 +1,33 @@
-// Новая версия ViewModel с репозиторием
-class AppListViewModel(
-    private val repository: AppRepository  // добавить зависимость
-) : ViewModel() {
+package io.mmaltsev.vkeducation.presentation.applist
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import io.mmaltsev.vkeducation.data.applist.AppListMapper
+import io.mmaltsev.vkeducation.data.repository.AppRepositoryImpl
+import io.mmaltsev.vkeducation.domain.model.App
+import io.mmaltsev.vkeducation.domain.repository.AppRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+class AppListViewModel : ViewModel() {
+    private val mapper = AppListMapper()
+    private val repository: AppRepository = AppRepositoryImpl(mapper)
+
+    // Состояние списка приложений
+    private val _apps = MutableStateFlow<List<App>>(emptyList())
+    val apps: StateFlow<List<App>> = _apps.asStateFlow()
+
+    // Состояние загрузки
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    // События для Snackbar
+    private val _snackbarEvents = MutableSharedFlow<String>()
+    val snackbarEvents = _snackbarEvents.asSharedFlow()
 
     init {
         loadApps()
@@ -9,9 +35,25 @@ class AppListViewModel(
 
     private fun loadApps() {
         viewModelScope.launch {
-            val apps = repository.getApps()  // данные из репозитория
-            _apps.value = apps
+            _isLoading.value = true
+            try {
+                val apps = repository.getApps()
+                _apps.value = apps
+            } catch (e: Exception) {
+                _snackbarEvents.emit("Ошибка загрузки: ${e.message}")
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
-    // остальной код без изменений
+
+    fun onLogoClicked() {
+        viewModelScope.launch {
+            _snackbarEvents.emit("Привет! Не нажимай на меня;)")
+        }
+    }
+
+    fun onAppClicked(appId: Int) {
+        // Здесь будет навигация
+    }
 }

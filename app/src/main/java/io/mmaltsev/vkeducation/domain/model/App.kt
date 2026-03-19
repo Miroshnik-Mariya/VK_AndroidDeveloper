@@ -5,6 +5,5 @@ data class App(
     val name: String,
     val category: String,
     val description: String,
-    val iconUrl: String,
-    val iconRes: Int? = null
+    val iconRes: Int
 )

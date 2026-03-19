@@ -11,8 +11,7 @@ class AppListMapper @Inject constructor() {
             name = dto.name,
             category = dto.category,
             description = dto.description,
-            iconRes = dto.iconRes,
-            iconUrl = TODO()
+            iconRes = dto.iconRes
         )
     }
 
