@@ -4,11 +4,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,9 +23,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import io.mmaltsev.vkeducation.R
-
+import io.mmaltsev.vkeducation.presentation.appdetails.AppListViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 
 data class App(
@@ -31,164 +40,106 @@ data class App(
 )
 
 @Composable
-fun AppListScreen(navController: NavController) {
+fun AppListScreen(
+    navController: NavController,
+    viewModel: AppListViewModel = viewModel()) {
+    val apps by viewModel.apps.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-    val apps = listOf(
-        App(
-            1,
-            "RuStore",
-            "Магазин приложений",
-            "Отечественный магазин приложений",
-            R.drawable.ic_rustore
-        ),
-        App(
-            id = 2,
-            name = "СберБанк Онлайн",
-            category = "Финансы",
-            description = "Больше чем банк",
-            iconRes = R.drawable.sber_logo_eng
-        ),
-        App(
-            id = 3,
-            name = "Яндекс.Браузер",
-            category = "Инструменты",
-            description = "Быстрый и безопасный браузер",
-            iconRes = R.drawable.yandex_logo_rus
-        ),
-        App(
-            id = 4,
-            name = "Почта Mail.ru",
-            category = "Инструменты",
-            description = "Почтовый клиент",
-            iconRes = R.drawable.mail_ru_logo
-        ),
-        App(
-            id = 5,
-            name = "Яндекс Навигатор",
-            category = "Транспорт",
-            description = "Парковки и заправки",
-            iconRes = R.drawable.navigator_yandex
-        ),
-        App(
-            id = 6,
-            name = "Minecraft",
-            category = "Игры",
-            description = "Minecraft",
-            iconRes = R.drawable.minecraft
-        ),
-        App(
-            id = 7,
-            name = "Grand Theft Auto",
-            category = "Игры",
-            description = "Grand Theft Auto",
-            iconRes = R.drawable.gta5
+    LaunchedEffect(Unit) {
+        viewModel.snackbarEvents.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(Color.Blue)
         )
-    )
 
-   Column (
-       modifier = Modifier
-           .fillMaxWidth()
-           .background(Color.Blue)
-//           .padding(horizontal = 40.dp)
-   ) {
+        {
+            AppListHeader(onLogoClick = { viewModel.onLogoClicked() })
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(18.dp))
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surface),
+                    contentPadding = PaddingValues(0.dp)
 
-       Box(
-           modifier = Modifier
-               .fillMaxWidth()
-               .height(100.dp)
-               //.background(Color(0xFFF5F5F5))  // светло-серый фон
-               .padding(20.dp),
-           contentAlignment = Alignment.TopStart
-       ) {
-           Column(
-               horizontalAlignment = Alignment.CenterHorizontally
-               //verticalArrangement = Alignment.CenterVertically as Arrangement.Vertical
-           ) {
+                ) {
+                    items(apps) { app ->
 
-               Row(
-                   modifier = Modifier
-                   .fillMaxWidth(),
-                   verticalAlignment = Alignment.CenterVertically,  // Центрирование по вертикали
-                   horizontalArrangement = Arrangement.SpaceBetween )
-               {
-                   Icon(
-                       painter = painterResource(id = R.drawable.ic_rustore),
-                       contentDescription = "RuStore Logo",
-                       modifier = Modifier.size(160.dp),
-                       tint = Color.White
-                       //horizontalAlignment = Alignment.TopStart
-                   )
-                   Icon(
-                       painter = painterResource(id = R.drawable.icon_tehno),
-                       contentDescription = "RuStore Logo",
-                       modifier = Modifier.size(30.dp),
-                       tint = Color.White,
+                        AppListItem(
+                            app = app,
+                            onClick = {
+                                // Переход на карточку приложения
+                                navController.navigate("app_detail/${app.id}")
+                            }
+                        )
+                    }
 
-                   )
-               }
-               Spacer(modifier = Modifier.height(16.dp))
-
-               // Текст под логотипом
-               Text(
-                   text = "RuStore",
-                   style = MaterialTheme.typography.headlineMedium,
-                   color = Color.Black
-               )
-
-               Text(
-                   text = "Магазин приложений",
-                   style = MaterialTheme.typography.bodyLarge,
-                   color = Color.Gray
-               )
-           }
-       }
-
-       LazyColumn(
-           modifier = Modifier
-               .fillMaxSize()
-               //.background(Color.White)
-               .background(MaterialTheme.colorScheme.surface)
-               //.roundedCornerShape(topStart = 32.dp,topEnd = 32.dp)
-               .clip(RoundedCornerShape(18.dp)),
-
-
-           contentPadding = PaddingValues(0.dp),
-
-//           verticalArrangement = Arrangement.spacedBy(8.dp)
-       ) {
-           items(apps) { app ->
-               AppListItem(
-                   app = app,
-                   onClick = {
-                       // Переход на карточку приложения
-                       navController.navigate("app_detail/${app.id}")
-                   }
-               )
-           }
-       }
-   }
+                }
+            }
+        }
+    }
 }
+
+    @Composable
+    fun AppListHeader(onLogoClick:()->Unit)
+    {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .clickable{onLogoClick()}
+            .padding(20.dp)
+        )
+        {
+            Row(modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            )
+            {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_rustore),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(160.dp),
+                    tint = Color.White
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_tehno),
+                    contentDescription = "Settings",
+                    modifier = Modifier.size(30.dp),
+                    tint = Color.White
+                )
+            }
+        }
+    }
 
 @Composable
 fun AppListItem(
     app: App,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-//        shape = RoundedCornerShape(
-//            topStart = 12.dp,
-//            topEnd = 12.dp
-//        ),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(0.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                //.background(Color.White)
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
