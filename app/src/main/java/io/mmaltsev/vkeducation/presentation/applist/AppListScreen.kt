@@ -98,5 +98,3 @@ fun AppListScreen(
 fun AppListScreenPreview() {
     AppListScreen(navController = rememberNavController())
 }
-
-
