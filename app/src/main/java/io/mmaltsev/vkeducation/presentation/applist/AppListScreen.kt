@@ -27,8 +27,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import io.mmaltsev.vkeducation.R
 import io.mmaltsev.vkeducation.presentation.appdetails.AppListViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 
 
 data class App(
