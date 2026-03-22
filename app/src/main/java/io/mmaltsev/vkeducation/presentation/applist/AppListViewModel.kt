@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import io.mmaltsev.vkeducation.data.applist.AppListMapper
 import io.mmaltsev.vkeducation.data.repository.AppRepositoryImpl
 import io.mmaltsev.vkeducation.domain.model.App
-import io.mmaltsev.vkeducation.domain.repository.AppRepository
+import io.mmaltsev.vkeducation.domain.repository.AppListRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class AppListViewModel : ViewModel() {
     private val mapper = AppListMapper()
-    private val repository: AppRepository = AppRepositoryImpl(mapper)
+    private val repository: AppListRepository = AppRepositoryImpl(mapper)
 
     // Состояние списка приложений
     private val _apps = MutableStateFlow<List<App>>(emptyList())
