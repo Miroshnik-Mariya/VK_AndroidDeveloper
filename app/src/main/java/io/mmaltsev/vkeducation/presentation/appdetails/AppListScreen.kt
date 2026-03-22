@@ -61,7 +61,6 @@ fun AppListScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .background(Color.Blue)
-                //.background(Color.Blue)
         )
 
         {
@@ -75,7 +74,6 @@ fun AppListScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.surface),
-                        //.clip(RoundedCornerShape(18.dp)),
                     contentPadding = PaddingValues(0.dp)
 
                 ) {
@@ -102,10 +100,6 @@ fun AppListScreen(
         Box(modifier = Modifier
             .fillMaxWidth()
             .height(100.dp)
-//            .background(
-//                color = Color.Blue,
-//                //shape = RoundedCornerShape(bottomStart = 18.dp, bottomEnd = 18.dp)
-//            )
             .clickable{onLogoClick()}
             .padding(20.dp)
         )
