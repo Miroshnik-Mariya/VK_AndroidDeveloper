@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AppListViewModel @Inject constructor(
-    private val repository: AppListRepository 
+    private val repository: AppListRepository
 ) : ViewModel() {
 
     // Состояние списка приложений

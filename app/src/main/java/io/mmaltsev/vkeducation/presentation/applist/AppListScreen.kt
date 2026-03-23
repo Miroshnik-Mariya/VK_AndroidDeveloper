@@ -23,9 +23,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+//import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.mmaltsev.vkeducation.R
 //import io.mmaltsev.vkeducation.presentation.applist.AppListViewModel
 import io.mmaltsev.vkeducation.domain.model.App
@@ -36,7 +37,7 @@ import io.mmaltsev.vkeducation.presentation.applist.components.*
 @Composable
 fun AppListScreen(
     navController: NavController,
-    viewModel: AppListViewModel = viewModel()) {
+    viewModel: AppListViewModel = hiltViewModel()) {
     val apps by viewModel.apps.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
