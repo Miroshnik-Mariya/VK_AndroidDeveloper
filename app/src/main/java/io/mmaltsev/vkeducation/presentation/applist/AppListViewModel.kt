@@ -2,8 +2,7 @@ package io.mmaltsev.vkeducation.presentation.applist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.mmaltsev.vkeducation.data.applist.AppListMapper
-import io.mmaltsev.vkeducation.data.applist.AppListRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.mmaltsev.vkeducation.domain.model.App
 import io.mmaltsev.vkeducation.domain.repository.AppListRepository
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -12,10 +11,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AppListViewModel : ViewModel() {
-    private val mapper = AppListMapper()
-    private val repository: AppListRepository = AppListRepositoryImpl(mapper)
+@HiltViewModel
+class AppListViewModel @Inject constructor(
+    private val repository: AppListRepository
+) : ViewModel() {
 
     // Состояние списка приложений
     private val _apps = MutableStateFlow<List<App>>(emptyList())

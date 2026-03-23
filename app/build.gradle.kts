@@ -54,8 +54,10 @@ android {
     }
 
     kapt {
-        arguments {arg("room.schemaLocation", "$projectDir/schemas")}
-    }
+        correctErrorTypes = true
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
 }
 
 dependencies {
