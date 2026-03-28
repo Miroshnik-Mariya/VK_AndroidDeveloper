@@ -6,12 +6,13 @@ import javax.inject.Inject
 class AppListMapper @Inject constructor() {
 
     fun toDomain(dto: AppListDto): App {
+        android.util.Log.d("AppListMapper", "App: ${dto.name}, iconUrl: ${dto.iconUrl}")
         return App(
             id = dto.id,
             name = dto.name,
             category = dto.category,
             description = dto.description,
-            iconUrl = dto.iconUrl
+            iconUrl = dto.iconUrl ?: ""
         )
     }
 

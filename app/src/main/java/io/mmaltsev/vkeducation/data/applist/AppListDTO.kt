@@ -6,13 +6,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AppListDto(
     @SerialName("id")
-    val id: Int,
+    val id: String,
     @SerialName("name")
     val name: String,
     @SerialName("category")
     val category: String,
     @SerialName("description")
     val description: String,
-    @SerialName("icon")
-    val iconUrl: String
+    @SerialName("iconUrl")  // ВАЖНО: iconUrl, а не icon
+    val iconUrl: String? = null
 )

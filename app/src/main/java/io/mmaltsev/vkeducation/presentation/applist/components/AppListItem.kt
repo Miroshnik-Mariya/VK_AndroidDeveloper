@@ -18,14 +18,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import io.mmaltsev.vkeducation.R
 import io.mmaltsev.vkeducation.domain.model.App
 import io.mmaltsev.vkeducation.presentation.theme.VkEducationTheme
-
 @Composable
 fun AppListItem(
     app: App,
@@ -45,12 +46,14 @@ fun AppListItem(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(
-                    model = app.iconUrl,
-                    error = androidx.compose.ui.res.painterResource(io.mmaltsev.vkeducation.R.drawable.ic_launcher_foreground)),
-                contentDescription = null,
-                modifier = Modifier.size(48.dp)
+            // Используем AsyncImage вместо Image для лучшей загрузки
+            AsyncImage(
+                model = app.iconUrl,
+                contentDescription = "App icon",
+                modifier = Modifier.size(48.dp),
+                contentScale = ContentScale.Crop,
+                error = painterResource(R.drawable.ic_launcher_foreground),
+                placeholder = painterResource(R.drawable.ic_launcher_foreground)
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -74,16 +77,14 @@ fun AppListItem(
             }
         }
     }
-
 }
-
 
 @Preview
 @Composable
 private fun Preview() {
     VkEducationTheme {
         val test = App(
-            id = 6,
+            id = "6",
             name = "Minecraft",
             category = "Игры",
             description = "Minecraft",
