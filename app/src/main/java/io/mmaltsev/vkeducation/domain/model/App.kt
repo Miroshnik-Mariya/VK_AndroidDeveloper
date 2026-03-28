@@ -5,5 +5,5 @@ data class App(
     val name: String,
     val category: String,
     val description: String,
-    val iconRes: Int
+    val iconUrl: String  //используем URL вместо ресурса
 )
