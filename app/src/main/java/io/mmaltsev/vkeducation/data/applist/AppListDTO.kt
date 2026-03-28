@@ -1,13 +1,18 @@
 package io.mmaltsev.vkeducation.data.applist
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppListDto(
-    val id: Int,
+    @SerialName("id")
+    val id: String,
+    @SerialName("name")
     val name: String,
+    @SerialName("category")
     val category: String,
+    @SerialName("description")
     val description: String,
-    val iconRes: Int,
+    @SerialName("iconUrl")  // ВАЖНО: iconUrl, а не icon
     val iconUrl: String? = null
 )
