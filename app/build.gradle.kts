@@ -94,12 +94,8 @@ android {
         kapt("androidx.room:room-compiler:2.5.0")
         implementation("androidx.room:room-ktx:2.8.3")
 
-
-        // OkHttp logging interceptor
         implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-// Retrofit with kotlinx serialization
         implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
-// Coil for image loading
         implementation("io.coil-kt:coil-compose:2.6.0")
     }
 }

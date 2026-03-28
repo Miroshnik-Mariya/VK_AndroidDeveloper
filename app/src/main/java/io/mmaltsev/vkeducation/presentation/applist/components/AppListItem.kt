@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
 import io.mmaltsev.vkeducation.R
 import io.mmaltsev.vkeducation.domain.model.App
 import io.mmaltsev.vkeducation.presentation.theme.VkEducationTheme
@@ -45,7 +46,9 @@ fun AppListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = app.iconRes),
+                painter = rememberAsyncImagePainter(
+                    model = app.iconUrl,
+                    error = androidx.compose.ui.res.painterResource(io.mmaltsev.vkeducation.R.drawable.ic_launcher_foreground)),
                 contentDescription = null,
                 modifier = Modifier.size(48.dp)
             )
@@ -84,7 +87,7 @@ private fun Preview() {
             name = "Minecraft",
             category = "Игры",
             description = "Minecraft",
-            iconRes = R.drawable.minecraft
+            iconUrl = "https://example.com/minecraft.png"
         )
 
         AppListItem(
