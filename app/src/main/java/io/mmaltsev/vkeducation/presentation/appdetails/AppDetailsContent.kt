@@ -88,7 +88,7 @@ private fun Preview() {
                     id = "fa2e31b8-1234-4cf7-9914-108a170a1b01",
                     name = "Гильдия Героев: Экшен ММО РПГ",
                     developer = "VK Play",
-                    category = Category.GAME,
+                    category = "Test",
                     ageRating = 12,
                     size = 223.7f,
                     screenshotUrlList = listOf(

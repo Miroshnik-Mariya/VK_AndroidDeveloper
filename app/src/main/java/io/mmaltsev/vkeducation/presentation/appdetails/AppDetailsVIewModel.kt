@@ -1,66 +1,39 @@
 package io.mmaltsev.vkeducation.presentation.appdetails
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.mmaltsev.vkeducation.domain.appdetails.GetAppDetailsUseCase
-import io.mmaltsev.vkeducation.presentation.applist.AppDetailsState
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
+import io.mmaltsev.vkeducation.domain.appdetails.AppDetails
+import io.mmaltsev.vkeducation.domain.appdetails.AppDetailsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AppDetailsViewModel @Inject constructor(
-    private val getAppDetailsUseCase: GetAppDetailsUseCase,
+    private val repository: AppDetailsRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<AppDetailsState>(AppDetailsState.Loading)
-    val state = _state.asStateFlow()
+    val state: StateFlow<AppDetailsState> = _state.asStateFlow()
 
-    private val _events = Channel<AppDetailsEvent>(BUFFERED)
-    val events = _events.receiveAsFlow()
-
-    init {
-        getAppDetails()
-    }
-
-    fun showUnderDevelopmentMessage() {
-        viewModelScope.launch {
-            _events.send(AppDetailsEvent.UnderDevelopment)
-        }
-    }
-
-    fun collapseDescription() {
-        _state.update { currentState ->
-            if (currentState is AppDetailsState.Content) {
-                currentState.copy(descriptionCollapsed = true)
-            } else {
-                currentState
-            }
-        }
-    }
-
-    fun getAppDetails() {
+    fun loadAppDetails(id: String) {
         viewModelScope.launch {
             _state.value = AppDetailsState.Loading
-
-            getAppDetailsUseCase("fa2e31b8-1234-4cf7-9914-108a170a1b01").catch { e ->
-                _state.value = AppDetailsState.Error
-                Log.d("HOHOHO", "ERROR $e")
-            }.collect { appDetails ->
-                _state.value = AppDetailsState.Content(
-                    appDetails = appDetails,
-                    descriptionCollapsed = false
-                )
+            try {
+                val details = repository.getAppDetails(id)  // Просто получаем данные
+                _state.value = AppDetailsState.Success(details)
+            } catch (e: Exception) {
+                _state.value = AppDetailsState.Error(e.message ?: "Ошибка загрузки")
             }
         }
+    }
+
+    sealed class AppDetailsState {
+        object Loading : AppDetailsState()
+        data class Success(val details: AppDetails) : AppDetailsState()
+        data class Error(val message: String) : AppDetailsState()
     }
 }
