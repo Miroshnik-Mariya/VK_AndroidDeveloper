@@ -29,6 +29,7 @@ class AppDetailsEntityMapper @Inject constructor() {
             gson.fromJson(it, type) as List<String>
         }
 
+
         return AppDetails(
             id = entity.id,
             name = entity.name,
