@@ -9,16 +9,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AppDetailsDao {
     @Query("SELECT * FROM app_details WHERE id = :id")
-    fun getAppDetails(id: String): Flow<AppDetailsEntity?>
+    suspend fun getAppDetails(id: String): AppDetailsEntity?  // ← одноразовый запрос
 
     @Query("SELECT * FROM app_details WHERE id = :id")
-    fun observeAppDetails(id: String): kotlinx.coroutines.flow.Flow<AppDetailsEntity?>
+    fun observeAppDetails(id: String): Flow<AppDetailsEntity?>  // ← Flow для наблюдения
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAppDetails(appDetails: AppDetailsEntity)
+    suspend fun insertAppDetails(entity: AppDetailsEntity)
 
     @Query("UPDATE app_details SET isInWishlist = :isInWishlist WHERE id = :id")
     suspend fun updateWishlistStatus(id: String, isInWishlist: Boolean)
-//    @Query("DELETE FROM app_details WHERE id = :id")
-//    suspend fun deleteAppDetails(id: String)
 }

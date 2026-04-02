@@ -2,7 +2,6 @@ package io.mmaltsev.vkeducation.data.appdetails.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import io.mmaltsev.vkeducation.domain.appdetails.Category
 
 @Entity(tableName = "app_details")
 data class AppDetailsEntity(
