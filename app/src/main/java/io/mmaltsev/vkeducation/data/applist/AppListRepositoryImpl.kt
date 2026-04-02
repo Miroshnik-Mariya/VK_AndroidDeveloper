@@ -116,4 +116,5 @@ class AppListRepositoryImpl @Inject constructor(
         delay(1000)
         return mapper.toDomainList(hardcodedApps)
     }
+
 }
