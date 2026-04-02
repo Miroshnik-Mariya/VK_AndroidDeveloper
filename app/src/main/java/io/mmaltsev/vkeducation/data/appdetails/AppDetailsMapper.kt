@@ -7,7 +7,7 @@ class AppDetailsMapper {
         id = dto.id,
         name = dto.name,
         developer = dto.developer,
-        category = dto.category,
+        category = dto.category.toString(),
         ageRating = dto.ageRating,
         size = dto.size.toFloat(),
         iconUrl = dto.icon,

@@ -49,7 +49,7 @@ fun AppDetailsHeader(
         Spacer(Modifier.width(16.dp))
         Column {
             Text(
-                text = getCategoryText(appDetails.category),
+                text = getCategoryText(appDetails.category),  // ← category теперь String
                 color = MaterialTheme.colorScheme.secondary,
                 fontSize = 12.sp,
             )
@@ -86,29 +86,32 @@ fun AppDetailsHeader(
     }
 }
 
-// Используем сериализованные имена категорий, которые приходят из API
+// Исправлено: принимает String, а не Category
 @Composable
-private fun getCategoryText(category: Category): String = when (category) {
-    Category.APP -> "Приложения"
-    Category.GAME -> "Игры"
-    Category.PRODUCTIVITY -> "Производительность"
-    Category.SOCIAL -> "Социальные сети"
-    Category.EDUCATION -> "Образование"
-    Category.ENTERTAINMENT -> "Развлечения"
-    Category.MUSIC -> "Музыка"
-    Category.VIDEO -> "Видео"
-    Category.PHOTOGRAPHY -> "Фотография"
-    Category.HEALTH -> "Здоровье"
-    Category.SPORTS -> "Спорт"
-    Category.NEWS -> "Новости"
-    Category.BOOKS -> "Книги"
-    Category.BUSINESS -> "Бизнес"
-    Category.FINANCE -> "Финансы"
-    Category.TRAVEL -> "Путешествия"
-    Category.MAPS -> "Карты"
-    Category.FOOD -> "Еда"
-    Category.SHOPPING -> "Покупки"
-    Category.UTILITIES -> "Утилиты"
+private fun getCategoryText(category: String): String {
+    return when (category.lowercase()) {
+        "app" -> "Приложения"
+        "game" -> "Игры"
+        "productivity" -> "Производительность"
+        "social" -> "Социальные сети"
+        "education" -> "Образование"
+        "entertainment" -> "Развлечения"
+        "music" -> "Музыка"
+        "video" -> "Видео"
+        "photography" -> "Фотография"
+        "health" -> "Здоровье"
+        "sports" -> "Спорт"
+        "news" -> "Новости"
+        "books" -> "Книги"
+        "business" -> "Бизнес"
+        "finance" -> "Финансы"
+        "travel" -> "Путешествия"
+        "maps" -> "Карты"
+        "food" -> "Еда"
+        "shopping" -> "Покупки"
+        "utilities" -> "Утилиты"
+        else -> category  // если категория не найдена, показываем как есть
+    }
 }
 
 @Preview
@@ -118,7 +121,7 @@ private fun Preview() {
         id = "fa2e31b8-1234-4cf7-9914-108a170a1b01",
         name = "Гильдия Героев: Экшен ММО РПГ",
         developer = "VK Play",
-        category = Category.GAME,
+        category = "game",  // ← теперь String
         ageRating = 12,
         size = 223.7f,
         screenshotUrlList = listOf(
@@ -129,7 +132,6 @@ private fun Preview() {
         ),
         iconUrl = "https://static.rustore.ru/imgproxy/APsbtHxkVa4MZ0DXjnIkSwFQ_KVIcqHK9o3gHY6pvOQ/preset:web_app_icon_62/plain/https://static.rustore.ru/apk/393868735/content/ICON/3f605e3e-f5b3-434c-af4d-77bc5f38820e.png@webp",
         description = "Легендарный рейд героев в Фэнтези РПГ. Станьте героем гильдии и зразите мастера подземелья!"
-
     )
     VkEducationTheme {
         AppDetailsHeader(appDetails = appDetails, modifier = Modifier.fillMaxWidth())

@@ -10,11 +10,10 @@ data class AppDetailsEntity(
     val id: String,
     val name: String,
     val developer: String,
-    val category: Category,
+    val category: String,
     val ageRating: Int,
     val size: Float,
     val iconUrl: String,
-    val screenshots: String? = null,
-    val description: String,
-    val lastUpdated: Long = System.currentTimeMillis()
+    val screenshots: String?,
+    val description: String
 )
