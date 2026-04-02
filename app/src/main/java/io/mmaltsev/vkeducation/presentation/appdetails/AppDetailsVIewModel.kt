@@ -8,7 +8,6 @@ import io.mmaltsev.vkeducation.domain.appdetails.AppDetailsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,33 +23,35 @@ class AppDetailsViewModel @Inject constructor(
 
     fun loadAppDetails(id: String) {
         currentAppId = id
-        observeAppDetails()  // ← подписываемся на изменения
-    }
-
-    // Подписка на данные из БД (автоматические обновления)
-    private fun observeAppDetails() {
         viewModelScope.launch {
-            repository.observeAppDetails(currentAppId)
-                .catch { e ->
-                    _state.value = AppDetailsState.Error(e.message ?: "Ошибка загрузки")
-                }
-                .collect { appDetails ->
-                    _state.value = AppDetailsState.Content(
-                        appDetails = appDetails,
-                        descriptionCollapsed = false
-                    )
-                }
+            _state.value = AppDetailsState.Loading
+            try {
+                val details = repository.getAppDetails(id)
+                _state.value = AppDetailsState.Content(
+                    appDetails = details,
+                    descriptionCollapsed = false
+                )
+            } catch (e: Exception) {
+                _state.value = AppDetailsState.Error(e.message ?: "Ошибка загрузки")
+            }
         }
     }
 
-    // Переключение wishlist
     fun toggleWishlist() {
         viewModelScope.launch {
-            repository.toggleWishlist(currentAppId)
+            try {
+                repository.toggleWishlist(currentAppId)
+                val updatedDetails = repository.getAppDetails(currentAppId)
+                val currentState = _state.value
+                if (currentState is AppDetailsState.Content) {
+                    _state.value = currentState.copy(appDetails = updatedDetails)
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("AppDetailsVM", "Error toggling wishlist", e)
+            }
         }
     }
 
-    // Схлопывание описания (если нужно)
     fun collapseDescription() {
         val currentState = _state.value
         if (currentState is AppDetailsState.Content) {
