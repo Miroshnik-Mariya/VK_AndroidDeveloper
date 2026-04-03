@@ -8,6 +8,7 @@ import io.mmaltsev.vkeducation.domain.appdetails.AppDetailsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,17 +24,21 @@ class AppDetailsViewModel @Inject constructor(
 
     fun loadAppDetails(id: String) {
         currentAppId = id
+        observeAppDetails()
+    }
+
+    private fun observeAppDetails() {
         viewModelScope.launch {
-            _state.value = AppDetailsState.Loading
-            try {
-                val details = repository.getAppDetails(id)
-                _state.value = AppDetailsState.Content(
-                    appDetails = details,
-                    descriptionCollapsed = false
-                )
-            } catch (e: Exception) {
-                _state.value = AppDetailsState.Error(e.message ?: "Ошибка загрузки")
-            }
+            repository.observeAppDetails(currentAppId)
+                .catch { e ->
+                    _state.value = AppDetailsState.Error(e.message ?: "Ошибка загрузки")
+                }
+                .collect { appDetails ->
+                    _state.value = AppDetailsState.Content(
+                        appDetails = appDetails,
+                        descriptionCollapsed = false
+                    )
+                }
         }
     }
 
@@ -41,11 +46,7 @@ class AppDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 repository.toggleWishlist(currentAppId)
-                val updatedDetails = repository.getAppDetails(currentAppId)
-                val currentState = _state.value
-                if (currentState is AppDetailsState.Content) {
-                    _state.value = currentState.copy(appDetails = updatedDetails)
-                }
+                // UI обновится автоматически через observeAppDetails
             } catch (e: Exception) {
                 android.util.Log.e("AppDetailsVM", "Error toggling wishlist", e)
             }

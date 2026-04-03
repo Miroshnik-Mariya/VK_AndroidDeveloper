@@ -33,7 +33,7 @@ class AppDetailsEntityMapper @Inject constructor() {
             id = entity.id,
             name = entity.name,
             developer = entity.developer,
-            category = entity.category,
+            category = entity.category.toString(),
             ageRating = entity.ageRating,
             size = entity.size,
             iconUrl = entity.iconUrl,

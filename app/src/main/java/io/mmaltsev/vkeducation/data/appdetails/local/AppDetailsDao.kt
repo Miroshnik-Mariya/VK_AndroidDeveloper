@@ -9,11 +9,11 @@ import androidx.room.Query
 interface AppDetailsDao {
 
     @Query("SELECT * FROM app_details WHERE id = :id")
-    fun getAppDetails(id: String): AppDetailsEntity?
+    fun getAppDetails(id: String): AppDetailsEntity?  // ← убрали suspend
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAppDetails(entity: AppDetailsEntity)
+    fun insertAppDetails(entity: AppDetailsEntity)  // ← убрали suspend
 
     @Query("UPDATE app_details SET isInWishlist = :isInWishlist WHERE id = :id")
-    fun updateWishlistStatus(id: String, isInWishlist: Boolean)
+    fun updateWishlistStatus(id: String, isInWishlist: Boolean)  // ← убрали suspend
 }

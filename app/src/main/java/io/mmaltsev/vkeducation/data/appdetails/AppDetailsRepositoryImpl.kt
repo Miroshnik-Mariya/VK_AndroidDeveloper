@@ -5,6 +5,7 @@ import io.mmaltsev.vkeducation.data.appdetails.local.AppDetailsEntityMapper
 import io.mmaltsev.vkeducation.domain.appdetails.AppDetails
 import io.mmaltsev.vkeducation.domain.appdetails.AppDetailsRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
@@ -13,29 +14,33 @@ import javax.inject.Inject
 class AppDetailsRepositoryImpl @Inject constructor(
     private val appApi: AppApi,
     private val dao: AppDetailsDao,
-    private val mapper: AppDetailsMapper,
+    private val appDetailsMapper: AppDetailsMapper,
     private val entityMapper: AppDetailsEntityMapper
 ) : AppDetailsRepository {
 
     override suspend fun getAppDetails(id: String): AppDetails {
         return withContext(Dispatchers.IO) {
-            val cached = dao.getAppDetails(id)
-            if (cached != null) {
-                return@withContext entityMapper.toDomain(cached)
-            }
+            val entity = dao.getAppDetails(id)  // ← теперь без suspend
 
-            val dto = appApi.getAppDetails(id)
-            val domain = mapper.toDomain(dto)
-            val entity = entityMapper.toEntity(domain)
-            dao.insertAppDetails(entity)
-            return@withContext domain
+            if (entity != null) {
+                return@withContext entityMapper.toDomain(entity)
+            } else {
+                val dto = appApi.getAppDetails(id)
+                val domain = appDetailsMapper.toDomain(dto)
+                val newEntity = entityMapper.toEntity(domain)
+                dao.insertAppDetails(newEntity)  // ← теперь без suspend
+                return@withContext domain
+            }
         }
     }
 
     override fun observeAppDetails(id: String): Flow<AppDetails> {
         return flow {
-            val details = getAppDetails(id)
-            emit(details)
+            while (true) {
+                val details = getAppDetails(id)
+                emit(details)
+                delay(100) 
+            }
         }
     }
 
@@ -45,7 +50,6 @@ class AppDetailsRepositoryImpl @Inject constructor(
             if (currentEntity != null) {
                 val newStatus = !currentEntity.isInWishlist
                 dao.updateWishlistStatus(id, newStatus)
-                android.util.Log.d("AppDetailsRepo", "Wishlist for $id toggled to $newStatus")
             }
         }
     }
