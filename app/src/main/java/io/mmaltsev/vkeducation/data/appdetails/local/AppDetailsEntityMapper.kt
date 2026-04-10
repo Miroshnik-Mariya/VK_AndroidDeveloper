@@ -5,8 +5,9 @@ import com.google.gson.reflect.TypeToken
 import io.mmaltsev.vkeducation.domain.appdetails.AppDetails
 import javax.inject.Inject
 
-class AppDetailsEntityMapper @Inject constructor() {
-    private val gson = Gson()
+class AppDetailsEntityMapper @Inject constructor(
+    private val gson: Gson
+) {
 
     fun toEntity(domain: AppDetails): AppDetailsEntity {
         return AppDetailsEntity(
@@ -33,7 +34,7 @@ class AppDetailsEntityMapper @Inject constructor() {
             id = entity.id,
             name = entity.name,
             developer = entity.developer,
-            category = entity.category.toString(),
+            category = entity.category,
             ageRating = entity.ageRating,
             size = entity.size,
             iconUrl = entity.iconUrl,

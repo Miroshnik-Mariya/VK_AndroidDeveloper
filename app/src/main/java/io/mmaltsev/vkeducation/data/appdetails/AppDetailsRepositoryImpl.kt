@@ -19,7 +19,7 @@ class AppDetailsRepositoryImpl @Inject constructor(
 
     override suspend fun getAppDetails(id: String): AppDetails {
         return withContext(Dispatchers.IO) {
-            val entity = dao.getAppDetails(id)  // ← теперь без suspend
+            val entity = dao.getAppDetails(id)
 
             if (entity != null) {
                 return@withContext entityMapper.toDomain(entity)
@@ -27,7 +27,7 @@ class AppDetailsRepositoryImpl @Inject constructor(
                 val dto = appApi.getAppDetails(id)
                 val domain = appDetailsMapper.toDomain(dto)
                 val newEntity = entityMapper.toEntity(domain)
-                dao.insertAppDetails(newEntity)  // ← теперь без suspend
+                dao.insertAppDetails(newEntity)
                 return@withContext domain
             }
         }
@@ -42,10 +42,10 @@ class AppDetailsRepositoryImpl @Inject constructor(
 
     override suspend fun toggleWishlist(id: String) {
         withContext(Dispatchers.IO) {
-            val currentEntity = dao.getAppDetails(id)  // ← теперь без suspend
+            val currentEntity = dao.getAppDetails(id)
             if (currentEntity != null) {
                 val newStatus = !currentEntity.isInWishlist
-                dao.updateWishlistStatus(id, newStatus)  // ← теперь без suspend
+                dao.updateWishlistStatus(id, newStatus)
             }
         }
     }

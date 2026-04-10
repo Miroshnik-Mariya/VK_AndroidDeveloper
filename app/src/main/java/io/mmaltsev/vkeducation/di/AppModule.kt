@@ -2,6 +2,7 @@ package io.mmaltsev.vkeducation.di
 
 import android.app.Application
 import androidx.room.Room
+import com.google.gson.Gson
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -26,6 +27,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return Gson()  // ← провайдер Gson
+    }
 
     @Provides
     @Singleton
@@ -66,7 +73,6 @@ object AppModule {
         return retrofit.create(AppListApi::class.java)
     }
 
-    // Room Database
     @Provides
     @Singleton
     fun provideDatabase(app: Application): AppDatabase {
@@ -85,8 +91,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAppDetailsEntityMapper(): AppDetailsEntityMapper {
-        return AppDetailsEntityMapper()
+    fun provideAppDetailsEntityMapper(gson: Gson): AppDetailsEntityMapper {  // ← Gson передаётся
+        return AppDetailsEntityMapper(gson)
     }
 
     @Provides
