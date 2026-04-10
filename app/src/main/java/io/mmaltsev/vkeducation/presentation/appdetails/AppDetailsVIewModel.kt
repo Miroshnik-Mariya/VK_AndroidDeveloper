@@ -1,5 +1,6 @@
 package io.mmaltsev.vkeducation.presentation.appdetails
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,13 +9,13 @@ import io.mmaltsev.vkeducation.domain.appdetails.AppDetailsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AppDetailsViewModel @Inject constructor(
-    private val repository: AppDetailsRepository
+    private val repository: AppDetailsRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<AppDetailsState>(AppDetailsState.Loading)
@@ -24,29 +25,34 @@ class AppDetailsViewModel @Inject constructor(
 
     fun loadAppDetails(id: String) {
         currentAppId = id
-        observeAppDetails()
-    }
-
-    private fun observeAppDetails() {
         viewModelScope.launch {
-            repository.observeAppDetails(currentAppId)
-                .catch { e ->
-                    _state.value = AppDetailsState.Error(e.message ?: "Ошибка загрузки")
-                }
-                .collect { appDetails ->
-                    _state.value = AppDetailsState.Content(
-                        appDetails = appDetails,
-                        descriptionCollapsed = false
-                    )
-                }
+            _state.value = AppDetailsState.Loading
+            try {
+                val details = repository.getAppDetails(id)
+                _state.value = AppDetailsState.Content(
+                    appDetails = details,
+                    descriptionCollapsed = false
+                )
+            } catch (e: Exception) {
+                _state.value = AppDetailsState.Error(e.message ?: "Ошибка загрузки")
+            }
         }
     }
 
     fun toggleWishlist() {
         viewModelScope.launch {
             try {
+                // 1. Обновляем статус в БД
                 repository.toggleWishlist(currentAppId)
-                // UI обновится автоматически через observeAppDetails
+
+                // 2. Перезагружаем данные из БД
+                val updatedDetails = repository.getAppDetails(currentAppId)
+
+                // 3. Обновляем UI
+                val currentState = _state.value
+                if (currentState is AppDetailsState.Content) {
+                    _state.value = currentState.copy(appDetails = updatedDetails)
+                }
             } catch (e: Exception) {
                 android.util.Log.e("AppDetailsVM", "Error toggling wishlist", e)
             }
