@@ -7,6 +7,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,6 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import io.mmaltsev.vkeducation.domain.appdetails.AppDetails
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +46,25 @@ fun AppDetailsScreen(
                             contentDescription = "Назад"
                         )
                     }
+                },
+                actions = {
+                    // ← Кнопка Wishlist
+                    when (state) {
+                        is AppDetailsViewModel.AppDetailsState.Content -> {
+                            val isInWishlist = (state as AppDetailsViewModel.AppDetailsState.Content)
+                                .appDetails.isInWishlist
+                            IconButton(onClick = { viewModel.toggleWishlist() }) {
+                                Icon(
+                                    imageVector = if (isInWishlist) Icons.Filled.Favorite
+                                    else Icons.Filled.FavoriteBorder,
+                                    contentDescription = "В избранное",
+                                    tint = if (isInWishlist) MaterialTheme.colorScheme.error
+                                    else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                        else -> {}
+                    }
                 }
             )
         }
@@ -59,9 +83,13 @@ fun AppDetailsScreen(
                         CircularProgressIndicator()
                     }
                 }
-                is AppDetailsViewModel.AppDetailsState.Success -> {
-                    val details = (state as AppDetailsViewModel.AppDetailsState.Success).details
-                    DetailsContent(details = details)
+                is AppDetailsViewModel.AppDetailsState.Content -> {
+                    val content = state as AppDetailsViewModel.AppDetailsState.Content
+                    DetailsContent(
+                        details = content.appDetails,
+                        isDescriptionCollapsed = content.descriptionCollapsed,
+                        onReadMoreClick = { viewModel.collapseDescription() }
+                    )
                 }
                 is AppDetailsViewModel.AppDetailsState.Error -> {
                     Column(
@@ -87,7 +115,12 @@ fun AppDetailsScreen(
 }
 
 @Composable
-fun DetailsContent(details: io.mmaltsev.vkeducation.domain.appdetails.AppDetails) {
+
+fun DetailsContent(
+    details: AppDetails,
+    isDescriptionCollapsed: Boolean,
+    onReadMoreClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -116,6 +149,10 @@ fun DetailsContent(details: io.mmaltsev.vkeducation.domain.appdetails.AppDetails
                     text = details.developer,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = if (details.isInWishlist) "В избранном" else "Добавить в избранное",
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }
@@ -150,8 +187,14 @@ fun DetailsContent(details: io.mmaltsev.vkeducation.domain.appdetails.AppDetails
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = details.description,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = if (isDescriptionCollapsed) 3 else Int.MAX_VALUE
                 )
+                if (details.description.length > 200) {
+                    TextButton(onClick = onReadMoreClick) {
+                        Text(if (isDescriptionCollapsed) "Читать далее" else "Свернуть")
+                    }
+                }
             }
         }
 

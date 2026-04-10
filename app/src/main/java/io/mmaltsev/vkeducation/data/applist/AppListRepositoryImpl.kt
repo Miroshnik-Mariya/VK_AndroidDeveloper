@@ -14,7 +14,6 @@ class AppListRepositoryImpl @Inject constructor(
             android.util.Log.d("AppListRepo", "Начинаем загрузку...")
             val response = api.getCatalog()
 
-            // Логируем количество и первый элемент
             android.util.Log.d("AppListRepo", "Загружено ${response.size} приложений")
 
             if (response.isNotEmpty()) {
