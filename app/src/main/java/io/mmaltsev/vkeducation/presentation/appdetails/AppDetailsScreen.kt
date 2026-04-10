@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import io.mmaltsev.vkeducation.domain.appdetails.AppDetails
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,8 +115,9 @@ fun AppDetailsScreen(
 }
 
 @Composable
+
 fun DetailsContent(
-    details: io.mmaltsev.vkeducation.domain.appdetails.AppDetails,
+    details: AppDetails,
     isDescriptionCollapsed: Boolean,
     onReadMoreClick: () -> Unit
 ) {
